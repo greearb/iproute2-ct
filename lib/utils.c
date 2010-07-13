@@ -31,6 +31,8 @@
 #endif
 
 #include "rt_names.h"
+#include <ctype.h>
+
 #include "utils.h"
 #include "ll_map.h"
 #include "namespace.h"
@@ -1328,8 +1330,23 @@ static ssize_t getcmdline(char **linep, size_t *lenp, FILE *in)
 	++cmdlineno;
 
 	cp = strchr(*linep, '#');
-	if (cp)
-		*cp = '\0';
+
+	/* We don't want to treat the # in the middle of a word as
+	 * a comment..makes batch commands dealing with mac-vlans: eth0#1
+	 * silently do the wrong thing.  So, tighten up the # syntax a bit.
+	 *
+	 * # at start of line comments rest of line
+	 * # preceded by a whitespace character comments rest of line.
+	 */
+	while (cp) {
+		if (cp &&
+		    ((cp == *linep) /* starts line */
+		     || ((cp > *linep) && isspace(*(cp - 1))))) { /* follows space */
+			*cp = '\0';
+			break;
+		}
+		cp = strchr(cp+1, '#');
+	}
 
 	while ((cp = strstr(*linep, "\\\n")) != NULL) {
 		char *line1 = NULL;
@@ -1346,8 +1363,15 @@ static ssize_t getcmdline(char **linep, size_t *lenp, FILE *in)
 		*cp = 0;
 
 		cp = strchr(line1, '#');
-		if (cp)
-			*cp = '\0';
+		while (cp) {
+			if (cp &&
+			    ((cp == line1) /* starts line */
+			     || ((cp > line1) && isspace(*(cp - 1))))) { /* follows space */
+				*cp = '\0';
+				break;
+			}
+			cp = strchr(cp+1, '#');
+		}
 
 		*lenp = strlen(*linep) + strlen(line1) + 1;
 		*linep = realloc(*linep, *lenp);
