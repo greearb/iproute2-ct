@@ -1,0 +1,13 @@
+This is the same as the standard iproute2 except for the
+changes listed below:
+
+*  iproute2:  Allow 'ip addr flush' to loop more than 10 times.
+
+*  iproute2:  Fix parsing of comments in batch mode.
+   The old code would treat any # as the start of comments,
+   but this makes batching with mac-vlans (typical name
+   is: eth0#1) silently do the wrong thing.
+
+   With this patch, # are only treated as starting a comment
+   when at the beginning of a line or when immediately preceded
+   by whitespace.
