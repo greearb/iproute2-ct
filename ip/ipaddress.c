@@ -648,7 +648,7 @@ int print_addrinfo_secondary(const struct sockaddr_nl *who, struct nlmsghdr *n,
 {
 	struct ifaddrmsg *ifa = NLMSG_DATA(n);
 
-	if (!ifa->ifa_flags & IFA_F_SECONDARY)
+	if (!(ifa->ifa_flags & IFA_F_SECONDARY))
 		return 0;
 
 	return print_addrinfo(who, n, arg);
@@ -864,6 +864,13 @@ static int ipaddr_list_or_flush(int argc, char **argv, int flush)
 			if (show_stats) {
 				printf("\n*** Round %d, deleting %d addresses ***\n", round, filter.flushed);
 				fflush(stdout);
+			}
+
+			/* If we are flushing, and specifying primary, then we want to flush only a single round.
+			 * Otherwise, we'll start flushing secondaries that were promoted to primaries
+			 */
+			if (!(filter.flags & IFA_F_SECONDARY) && (filter.flagmask & IFA_F_SECONDARY)) {
+				return 0;
 			}
 		}
 		fprintf(stderr, "*** Flush remains incomplete after %d rounds. ***\n", max_flush_loops);
