@@ -452,7 +452,7 @@ int print_addrinfo(const struct sockaddr_nl *who, struct nlmsghdr *n,
 	struct ifaddrmsg *ifa = NLMSG_DATA(n);
 	int len = n->nlmsg_len;
 	int deprecated = 0;
-	int ifa_flags;
+	unsigned int ifa_flags;
 	struct rtattr * rta_tb[IFA_MAX+1];
 	char abuf[256];
 	SPRINT_BUF(b1);
