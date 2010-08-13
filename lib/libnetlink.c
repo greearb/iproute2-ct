@@ -259,7 +259,7 @@ skip_it:
 			continue;
 		}
 		if (msglen) {
-			fprintf(stderr, "!!!Remnant of size %d\n", status);
+			fprintf(stderr, "!!!Remnant of size %d\n", msglen);
 			exit(1);
 		}
 	}
