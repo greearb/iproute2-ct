@@ -452,6 +452,7 @@ int print_addrinfo(const struct sockaddr_nl *who, struct nlmsghdr *n,
 	struct ifaddrmsg *ifa = NLMSG_DATA(n);
 	int len = n->nlmsg_len;
 	int deprecated = 0;
+	/* Use local copy of ifa_flags to not interfere with filtering code */
 	unsigned int ifa_flags;
 	struct rtattr * rta_tb[IFA_MAX+1];
 	char abuf[256];
@@ -850,7 +851,7 @@ static int ipaddr_list_or_flush(int argc, char **argv, int flush)
 				exit(1);
 			}
 			if (filter.flushed == 0) {
-			flush_done:
+flush_done:
 				if (show_stats) {
 					if (round == 0)
 						printf("Nothing to flush.\n");
@@ -869,12 +870,13 @@ static int ipaddr_list_or_flush(int argc, char **argv, int flush)
 				fflush(stdout);
 			}
 
-			/* If we are flushing, and specifying primary, then we want to flush only a single round.
-			 * Otherwise, we'll start flushing secondaries that were promoted to primaries
+			/* If we are flushing, and specifying primary, then we
+			 * want to flush only a single round.  Otherwise, we'll
+			 * start flushing secondaries that were promoted to
+			 * primaries.
 			 */
-			if (!(filter.flags & IFA_F_SECONDARY) && (filter.flagmask & IFA_F_SECONDARY)) {
+			if (!(filter.flags & IFA_F_SECONDARY) && (filter.flagmask & IFA_F_SECONDARY))
 				goto flush_done;
-			}
 		}
 		fprintf(stderr, "*** Flush remains incomplete after %d rounds. ***\n", max_flush_loops);
 		fflush(stderr);
