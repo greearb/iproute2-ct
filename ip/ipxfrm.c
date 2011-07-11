@@ -59,8 +59,8 @@ static void usage(void) __attribute__((noreturn));
 static void usage(void)
 {
 	fprintf(stderr,
-		"Usage: ip xfrm XFRM_OBJECT { COMMAND | help }\n"
-		"where  XFRM_OBJECT := { state | policy | monitor }\n");
+		"Usage: ip xfrm XFRM-OBJECT { COMMAND | help }\n"
+		"where  XFRM-OBJECT := state | policy | monitor\n");
 	exit(-1);
 }
 
@@ -854,6 +854,7 @@ void xfrm_state_info_print(struct xfrm_usersa_info *xsinfo,
 		XFRM_FLAG_PRINT(fp, flags, XFRM_STATE_WILDRECV, "wildrecv");
 		XFRM_FLAG_PRINT(fp, flags, XFRM_STATE_ICMP, "icmp");
 		XFRM_FLAG_PRINT(fp, flags, XFRM_STATE_AF_UNSPEC, "af-unspec");
+		XFRM_FLAG_PRINT(fp, flags, XFRM_STATE_ALIGN4, "align4");
 		if (flags)
 			fprintf(fp, "%x", flags);
 	}
@@ -980,6 +981,7 @@ void xfrm_policy_info_print(struct xfrm_userpolicy_info *xpinfo,
 
 		fprintf(fp, "flag ");
 		XFRM_FLAG_PRINT(fp, flags, XFRM_POLICY_LOCALOK, "localok");
+		XFRM_FLAG_PRINT(fp, flags, XFRM_POLICY_ICMP, "icmp");
 		if (flags)
 			fprintf(fp, "%x", flags);
 	}
@@ -1038,7 +1040,7 @@ int xfrm_id_parse(xfrm_address_t *saddr, struct xfrm_id *id, __u16 *family,
 
 			ret = xfrm_xfrmproto_getbyname(*argv);
 			if (ret < 0)
-				invarg("\"XFRM_PROTO\" is invalid", *argv);
+				invarg("\"XFRM-PROTO\" is invalid", *argv);
 
 			id->proto = (__u8)ret;
 
@@ -1070,7 +1072,7 @@ int xfrm_id_parse(xfrm_address_t *saddr, struct xfrm_id *id, __u16 *family,
 		invarg("the same address family is required between \"src\" and \"dst\"", *argv);
 
 	if (loose == 0 && id->proto == 0)
-		missarg("XFRM_PROTO");
+		missarg("XFRM-PROTO");
 	if (argc == *argcp)
 		missarg("ID");
 
