@@ -10,6 +10,11 @@ echo "PKG_CONFIG:=${PKG_CONFIG}" >>Config
 TMPDIR=$(mktemp -d config.XXXXXX)
 trap 'status=$?; rm -rf $TMPDIR; exit $status' EXIT HUP INT QUIT TERM
 
+if [ "_$CC" == "_" ]
+then
+    CC=gcc
+fi
+
 check_atm()
 {
 cat >$TMPDIR/atmtest.c <<EOF
@@ -223,6 +228,70 @@ fi
 rm -f $TMPDIR/ipsettest.c $TMPDIR/ipsettest
 }
 
+check_inotify()
+{
+cat >/tmp/inotify_test.c <<EOF
+#include <sys/inotify.h>
+int main(int argc, char **argv)
+{
+	return 0;
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/inotify_test /tmp/inotify_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_INOTIFY:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/inotify_test.c /tmp/inotify_test
+}
+
+
+check_unshare()
+{
+cat >/tmp/unshare_test.c <<EOF
+#define _GNU_SOURCE             /* See feature_test_macros(7) */
+#include <sched.h>
+int main(int argc, char **argv)
+{
+	return unshare(0); /* 0 == no op */
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/unshare_test /tmp/unshare_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_UNSHARE:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/unshare_test.c /tmp/unshare_test
+}
+
+
+check_db185()
+{
+cat >/tmp/db185_test.c <<EOF
+#include <db_185.h>
+int main(int argc, char **argv)
+{
+	return 0;
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/db185_test /tmp/db185_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_DB185:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/db185_test.c /tmp/db185_test
+}
+
+
 echo "# Generated config based on" $INCLUDE >Config
 
 echo "TC schedulers"
@@ -244,3 +313,12 @@ check_ipt_lib_dir
 
 echo -n "libc has setns: "
 check_setns
+
+echo -n "libc has inotify support: "
+check_inotify
+
+echo -n "libc has unshare support: "
+check_unshare
+
+echo -n "libc has db_185 support: "
+check_db185

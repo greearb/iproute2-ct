@@ -14,6 +14,14 @@ ifeq ($(IP_CONFIG_SETNS),y)
 	CFLAGS += -DHAVE_SETNS
 endif
 
+ifeq ($(IP_CONFIG_DISABLE_INOTIFY),y)
+	CFLAGS += -DDISABLE_INOTIFY
+endif
+
+ifeq ($(IP_CONFIG_DISABLE_UNSHARE),y)
+	CFLAGS += -DCONFIG_IP_NO_UNSHARE
+endif
+
 ALLOBJ=$(IPOBJ) $(RTMONOBJ)
 SCRIPTS=ifcfg rtpr routel routef
 TARGETS=ip rtmon
