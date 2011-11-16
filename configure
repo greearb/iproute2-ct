@@ -3,6 +3,11 @@
 #
 INCLUDE=${1:-"$PWD/include"}
 
+if [ "_$CC" == "_" ]
+then
+    CC=gcc
+fi
+
 check_atm()
 {
 cat >/tmp/atmtest.c <<EOF
@@ -13,7 +18,7 @@ int main(int argc, char **argv) {
 	return 0;
 }
 EOF
-gcc -I$INCLUDE -o /tmp/atmtest /tmp/atmtest.c -latm >/dev/null 2>&1 
+${CC} -I$INCLUDE -o /tmp/atmtest /tmp/atmtest.c -latm >/dev/null 2>&1
 if [ $? -eq 0 ]
 then
     echo "TC_CONFIG_ATM:=y" >>Config
@@ -47,7 +52,7 @@ int main(int argc, char **argv)
 
 EOF
 
-if gcc -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl -lxtables >/dev/null 2>&1
+if ${CC} -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl -lxtables >/dev/null 2>&1
 then
 	echo "TC_CONFIG_XT:=y" >>Config
 	echo "using xtables"
@@ -84,7 +89,7 @@ int main(int argc, char **argv) {
 }
 
 EOF
-gcc -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl >/dev/null 2>&1
+${CC} -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl >/dev/null 2>&1
 
 if [ $? -eq 0 ]
 then
@@ -124,7 +129,7 @@ int main(int argc, char **argv) {
 }
 
 EOF
-gcc -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl >/dev/null 2>&1
+${CC} -I$INCLUDE $IPTC -o /tmp/ipttest /tmp/ipttest.c $IPTL -ldl >/dev/null 2>&1
 
 if [ $? -eq 0 ]
 then
@@ -168,7 +173,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 EOF
-gcc -I$INCLUDE -o /tmp/setnstest /tmp/setnstest.c >/dev/null 2>&1
+${CC} -I$INCLUDE -o /tmp/setnstest /tmp/setnstest.c >/dev/null 2>&1
 if [ $? -eq 0 ]
 then
 	echo "IP_CONFIG_SETNS:=y" >>Config
@@ -178,6 +183,70 @@ else
 fi
 rm -f /tmp/setnstest.c /tmp/setnstest
 }
+
+check_inotify()
+{
+cat >/tmp/inotify_test.c <<EOF
+#include <sys/inotify.h>
+int main(int argc, char **argv)
+{
+	return 0;
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/inotify_test /tmp/inotify_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_INOTIFY:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/inotify_test.c /tmp/inotify_test
+}
+
+
+check_unshare()
+{
+cat >/tmp/unshare_test.c <<EOF
+#define _GNU_SOURCE             /* See feature_test_macros(7) */
+#include <sched.h>
+int main(int argc, char **argv)
+{
+	return unshare(0); /* 0 == no op */
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/unshare_test /tmp/unshare_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_UNSHARE:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/unshare_test.c /tmp/unshare_test
+}
+
+
+check_db185()
+{
+cat >/tmp/db185_test.c <<EOF
+#include <db_185.h>
+int main(int argc, char **argv)
+{
+	return 0;
+}
+EOF
+${CC} -I$INCLUDE -o /tmp/db185_test /tmp/db185_test.c >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+	echo "yes"
+else
+	echo "IP_CONFIG_DISABLE_DB185:=y" >>Config
+	echo "no"
+fi
+rm -f /tmp/db185_test.c /tmp/db185_test
+}
+
 
 echo "# Generated config based on" $INCLUDE >Config
 
@@ -197,3 +266,12 @@ check_ipt_lib_dir
 
 echo -n "libc has setns: "
 check_setns
+
+echo -n "libc has inotify support: "
+check_inotify
+
+echo -n "libc has unshare support: "
+check_unshare
+
+echo -n "libc has db_185 support: "
+check_db185

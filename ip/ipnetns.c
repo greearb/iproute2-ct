@@ -2,7 +2,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#ifndef DISABLE_INOTIFY
 #include <sys/inotify.h>
+#endif
 #include <sys/mount.h>
 #include <sys/param.h>
 #include <sys/syscall.h>
@@ -118,6 +120,10 @@ static void bind_etc(const char *name)
 
 static int netns_exec(int argc, char **argv)
 {
+#ifdef CONFIG_IP_NO_UNSHARE
+	fprintf(stderr, "No unshare on this platform, cannod do netns_exec\n");
+	return -1;
+#else
 	/* Setup the proper environment for apps that are not netns
 	 * aware, and execute a program in that environment.
 	 */
@@ -169,6 +175,7 @@ static int netns_exec(int argc, char **argv)
 		fprintf(stderr, "exec of %s failed: %s\n",
 			cmd, strerror(errno));
 	exit(-1);
+#endif
 }
 
 static int netns_delete(int argc, char **argv)
@@ -194,6 +201,10 @@ static int netns_delete(int argc, char **argv)
 
 static int netns_add(int argc, char **argv)
 {
+#ifdef CONFIG_IP_NO_UNSHARE
+	fprintf(stderr, "No unshare on this platform, cannod do netns_add\n");
+	return -1;
+#else
 	/* This function creates a new network namespace and
 	 * a new mount namespace and bind them into a well known
 	 * location in the filesystem based on the name provided.
@@ -242,11 +253,16 @@ out_delete:
 	netns_delete(argc, argv);
 	exit(-1);
 	return -1;
+#endif
 }
 
 
 static int netns_monitor(int argc, char **argv)
 {
+#ifdef DISABLE_INOTIFY
+	fprintf(stderr, "inotify not supported (compiled out)\n");
+	return -1;
+#else
 	char buf[4096];
 	struct inotify_event *event;
 	int fd;
@@ -278,6 +294,7 @@ static int netns_monitor(int argc, char **argv)
 		}
 	}
 	return 0;
+#endif
 }
 
 int do_netns(int argc, char **argv)

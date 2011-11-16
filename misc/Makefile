@@ -18,8 +18,13 @@ ifstat: ifstat.c
 rtacct: rtacct.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o rtacct rtacct.c $(LIBNETLINK) -lm
 
+ifeq ($(IP_CONFIG_DISABLE_DB185),y)
+arpd:
+	@echo "Cannot build arpd on this system, no db_185.h file."
+else
 arpd: arpd.c
 	$(CC) $(CFLAGS) -I$(DBM_INCLUDE) $(LDFLAGS) -o arpd arpd.c $(LIBNETLINK) -ldb -lpthread
+endif
 
 ssfilter.c: ssfilter.y
 	bison ssfilter.y -o ssfilter.c
