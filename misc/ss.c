@@ -3776,8 +3776,10 @@ int main(int argc, char *argv[])
 		udp_show(&current_filter);
 	if (current_filter.dbs & (1<<TCP_DB))
 		tcp_show(&current_filter, IPPROTO_TCP);
+#ifdef IPPROTO_DCCP
 	if (current_filter.dbs & (1<<DCCP_DB))
 		tcp_show(&current_filter, IPPROTO_DCCP);
+#endif
 
 	if (show_users || show_proc_ctx || show_sock_ctx)
 		user_ent_destroy();
