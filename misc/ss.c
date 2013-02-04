@@ -5850,8 +5850,10 @@ int main(int argc, char *argv[])
 		udp_show(&current_filter);
 	if (current_filter.dbs & (1<<TCP_DB))
 		tcp_show(&current_filter);
+#ifdef IPPROTO_DCCP
 	if (current_filter.dbs & (1<<DCCP_DB))
 		dccp_show(&current_filter);
+#endif
 	if (current_filter.dbs & (1<<SCTP_DB))
 		sctp_show(&current_filter);
 	if (current_filter.dbs & VSOCK_DBM)
