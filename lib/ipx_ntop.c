@@ -1,3 +1,5 @@
+#include "iptables_common.h"
+
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>

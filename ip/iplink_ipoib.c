@@ -10,6 +10,8 @@
  *		copied iflink_vlan.c authored by Patrick McHardy <kaber@trash.net>
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

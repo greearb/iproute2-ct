@@ -10,6 +10,8 @@
  *
  */
 
+#include "iptables_common.h"
+
 #include <string.h>
 #include <net/if.h>
 #include <linux/veth.h>

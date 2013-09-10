@@ -8,6 +8,8 @@
  * Authors:	Julian Anastasov <ja@ssi.bg>, August 2012
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

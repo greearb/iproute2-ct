@@ -10,6 +10,8 @@
  *          Saurabh Mohan <saurabh.mohan@vyatta.com> Modified link_gre.c for VTI
  */
 
+#include "iptables_common.h"
+
 #include <string.h>
 #include <net/if.h>
 #include <sys/types.h>
