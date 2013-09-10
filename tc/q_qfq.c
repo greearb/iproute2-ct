@@ -10,6 +10,9 @@
  *		Fabio Checconi <fabio@gandalf.sssup.it>
  *
  */
+
+#include "iptables_common.h"
+
 #include <syslog.h>
 #include <fcntl.h>
 #include <sys/socket.h>

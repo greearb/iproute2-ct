@@ -9,6 +9,8 @@
  * Authors: Gregoire Baron <baronchon@n7mm.org>
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

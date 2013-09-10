@@ -10,6 +10,8 @@
  *		Arnd Bergmann <arnd@arndb.de>
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

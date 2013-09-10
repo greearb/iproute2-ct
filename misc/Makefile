@@ -18,8 +18,16 @@ ifstat: ifstat.c
 rtacct: rtacct.c
 	$(CC) $(CFLAGS) $(LDFLAGS) -o rtacct rtacct.c $(LIBNETLINK) -lm
 
+# Don't bother with this when cross-compiling...DBM_INCLUDE goes poking
+# in host includes most likely...which causes all sorts of problems.
+ifeq ($(CC),gcc)
 arpd: arpd.c
 	$(CC) $(CFLAGS) -I$(DBM_INCLUDE) $(LDFLAGS) -o arpd arpd.c $(LIBNETLINK) -ldb -lpthread
+else
+arpd:
+	echo "Not building ardp when cross-compiling."
+	true
+endif
 
 ssfilter.c: ssfilter.y
 	bison ssfilter.y -o ssfilter.c

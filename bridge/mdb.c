@@ -2,6 +2,8 @@
  * Get mdb table with netlink
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
