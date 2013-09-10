@@ -10,6 +10,8 @@
  *		J Hadi Salim: Extension to ingress
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

@@ -16,6 +16,8 @@
  *
  */
 
+#include "iptables_common.h"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -9,6 +9,8 @@
  * Authors:     Daniel Borkmann, <borkmann@redhat.com>
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

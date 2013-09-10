@@ -4,6 +4,8 @@
  * Written 1998,1999 by Werner Almesberger
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

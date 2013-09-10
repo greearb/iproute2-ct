@@ -1,4 +1,5 @@
 %{
+#include "iptables_common.h"
  #include "emp_ematch.yacc.h"
  #include "m_ematch.h"
 

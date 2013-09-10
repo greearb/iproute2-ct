@@ -9,6 +9,8 @@
  * Authors:	Alexey Kuznetsov, <kuznet@ms2.inr.ac.ru>
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <syslog.h>
 #include <malloc.h>

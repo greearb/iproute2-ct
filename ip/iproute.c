@@ -10,6 +10,8 @@
  *
  */
 
+#include "iptables_common.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -22,7 +24,11 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
+#ifdef __ANDROID__
+#include "../../../include/android/linux/in_route.h"
+#else
 #include <linux/in_route.h>
+#endif
 #include <errno.h>
 
 #include "rt_names.h"

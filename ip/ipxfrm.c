@@ -24,6 +24,8 @@
  *	Masahide NAKAMURA @USAGI
  */
 
+#include "iptables_common.h"
+
 #include <alloca.h>
 #include <stdio.h>
 #include <stdlib.h>

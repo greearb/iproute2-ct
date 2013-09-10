@@ -10,6 +10,7 @@
  *
  */
 
+#include "iptables_common.h"
 
 
 #include <stdio.h>

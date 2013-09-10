@@ -30,6 +30,8 @@
 
 #define HDR_LINE_LENGTH		(MAX_FIELDS*FIELD_WIDTH_MAX)
 
+#include "iptables_common.h"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
