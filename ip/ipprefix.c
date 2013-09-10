@@ -29,7 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#ifndef __ANDROID__
 #include <netinet/icmp6.h>
+#endif
 
 #include "utils.h"
 #include "ip_common.h"
