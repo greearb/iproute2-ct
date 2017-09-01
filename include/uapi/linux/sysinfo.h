@@ -4,6 +4,14 @@
 
 #include <linux/types.h>
 
+/* So we can compile on older OSs, hopefully this is correct. --Ben */
+#ifndef __kernel_long_t
+typedef long __kernel_long_t;
+#endif
+#ifndef __kernel_ulong_t
+typedef unsigned long __kernel_ulong_t;
+#endif
+
 #define SI_LOAD_SHIFT	16
 struct sysinfo {
 	__kernel_long_t uptime;		/* Seconds since boot */
