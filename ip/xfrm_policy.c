@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "xfrm.h"
 #include "ip_common.h"
+#include "xtables.h"
 
 /* #define NLMSG_DELETEALL_BUF_SIZE (4096-512) */
 #define NLMSG_DELETEALL_BUF_SIZE 8192
