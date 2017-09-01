@@ -38,6 +38,7 @@
 #include "utils.h"
 #include "xfrm.h"
 #include "ip_common.h"
+#include "xtables.h"
 
 #define STRBUF_SIZE	(128)
 
